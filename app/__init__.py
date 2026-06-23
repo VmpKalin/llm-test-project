@@ -1,0 +1,1 @@
+"""Bookmarks service application package."""
