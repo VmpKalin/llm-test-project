@@ -1,6 +1,6 @@
 """HTTP route handlers for the bookmarks service."""
 
-from fastapi import APIRouter, Response
+from fastapi import APIRouter, Response, HTTPException
 
 from app.models import Bookmark, BookmarkCreate
 from app.repository import repository
@@ -35,6 +35,12 @@ def list_bookmarks() -> list[Bookmark]:
 # parse "search" as an integer id.
 
 
+@router.get("/bookmarks/search", response_model=list[Bookmark])
+def search_bookmarks(tag: str) -> list[Bookmark]:
+    """Return all bookmarks that carry the given tag."""
+    return repository.search(tag)
+
+
 @router.get("/bookmarks/{bookmark_id}", response_model=Bookmark)
 def get_bookmark(bookmark_id: int) -> Bookmark | None:
     """Return a single bookmark by id."""
@@ -42,12 +48,3 @@ def get_bookmark(bookmark_id: int) -> Bookmark | None:
     # which FastAPI serializes as a 200 response with a null body.
     # It should instead raise an HTTPException(404).
     return repository.get(bookmark_id)
-
-
-@router.delete("/bookmarks/{bookmark_id}", status_code=204)
-def delete_bookmark(bookmark_id: int) -> Response:
-    """Delete a bookmark by id and return 204 No Content."""
-    # TODO (planted problem 3): implement deletion.
-    # This should remove the bookmark via repository.delete() and return a
-    # 204 response, or raise a 404 if the bookmark does not exist.
-    raise NotImplementedError("DELETE /bookmarks/{id} is not implemented yet")
