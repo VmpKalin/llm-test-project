@@ -14,10 +14,8 @@ class BookmarkRepository:
 
     def __init__(self) -> None:
         self._items: dict[int, Bookmark] = {}
-        # BUG (planted problem 4): off-by-one in the id generator.
-        # This counter starts at -1, so the first generated id is 0.
-        # Ids should start at 1.
-        self._next_id = -1
+        # Fix the off-by-one bug by starting the counter at 0
+        self._next_id = 0
 
     def _generate_id(self) -> int:
         """Return a fresh integer id for a new bookmark."""
@@ -44,7 +42,7 @@ class BookmarkRepository:
         # BUG (planted problem 1): this comparison is case-sensitive.
         # Searching for "python" will miss a bookmark tagged "Python".
         # The tag match should be case-insensitive.
-        return [b for b in self._items.values() if tag in b.tags]
+        return [b for b in self._items.values() if tag.lower() in b.tags]
 
     def delete(self, bookmark_id: int) -> bool:
         """Remove a bookmark by id. Return True if it existed, else False."""
