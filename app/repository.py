@@ -17,7 +17,7 @@ class BookmarkRepository:
         # BUG (planted problem 4): off-by-one in the id generator.
         # This counter starts at -1, so the first generated id is 0.
         # Ids should start at 1.
-        self._next_id = -1
+        self._next_id = 0
 
     def _generate_id(self) -> int:
         """Return a fresh integer id for a new bookmark."""
