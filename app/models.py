@@ -1,3 +1,5 @@
+"""Pydantic models for the bookmarks service. Defines Bookmark and BookmarkCreate classes."""
+
 """Pydantic models for the bookmarks service."""
 
 from pydantic import BaseModel, Field
