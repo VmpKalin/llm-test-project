@@ -20,19 +20,16 @@ def create_bookmark(data: BookmarkCreate) -> Bookmark:
     return repository.add(data)
 
 
+@router.get("/bookmarks/search")
+def search_bookmarks(tag: str) -> list[Bookmark]:
+    """Return all bookmarks that carry the given tag."""
+    return repository.search(tag)
+
+
 @router.get("/bookmarks", response_model=list[Bookmark])
 def list_bookmarks() -> list[Bookmark]:
     """Return all stored bookmarks."""
     return repository.list()
-
-
-# BUG (planted problem 6): the search route is documented in the README
-# (GET /bookmarks/search?tag=...) but is intentionally missing here.
-# It must be added so that searching by tag works through the API.
-#
-# Note on ordering: when the search route is added it must be declared
-# BEFORE the /bookmarks/{id} route below, otherwise FastAPI will try to
-# parse "search" as an integer id.
 
 
 @router.get("/bookmarks/{bookmark_id}", response_model=Bookmark)
