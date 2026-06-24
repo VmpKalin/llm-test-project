@@ -1,6 +1,6 @@
 """HTTP route handlers for the bookmarks service."""
 
-from fastapi import APIRouter, Response
+from fastapi import APIRouter, HTTPException, Response
 
 from app.models import Bookmark, BookmarkCreate
 from app.repository import repository
@@ -36,12 +36,13 @@ def list_bookmarks() -> list[Bookmark]:
 
 
 @router.get("/bookmarks/{bookmark_id}", response_model=Bookmark)
-def get_bookmark(bookmark_id: int) -> Bookmark | None:
+def get_bookmark(bookmark_id: int) -> Bookmark:
     """Return a single bookmark by id."""
-    # BUG (planted problem 2): when the id does not exist this returns None,
-    # which FastAPI serializes as a 200 response with a null body.
-    # It should instead raise an HTTPException(404).
-    return repository.get(bookmark_id)
+    # Fix the 404 handling
+    bookmark = repository.get(bookmark_id)
+    if bookmark is None:
+        raise HTTPException(status_code=404, detail="Bookmark not found")
+    return bookmark
 
 
 @router.delete("/bookmarks/{bookmark_id}", status_code=204)
