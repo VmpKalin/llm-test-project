@@ -39,10 +39,9 @@ class BookmarkRepository:
 
     def search(self, tag: str) -> list[Bookmark]:
         """Return all bookmarks that carry the given tag."""
-        # BUG (planted problem 1): this comparison is case-sensitive.
-        # Searching for "python" will miss a bookmark tagged "Python".
-        # The tag match should be case-insensitive.
-        return [b for b in self._items.values() if tag.lower() in b.tags]
+        # Fix the case-insensitive comparison
+        search_tag = tag.lower()
+        return [b for b in self._items.values() if search_tag in {t.lower() for t in b.tags}]
 
     def delete(self, bookmark_id: int) -> bool:
         """Remove a bookmark by id. Return True if it existed, else False."""
