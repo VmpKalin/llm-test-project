@@ -1,6 +1,6 @@
 """Pydantic models for the bookmarks service."""
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, validator
 
 
 class BookmarkCreate(BaseModel):
@@ -10,9 +10,13 @@ class BookmarkCreate(BaseModel):
     title: str = Field(..., description="Human-readable title for the bookmark.")
     tags: list[str] = Field(default_factory=list, description="Optional list of tags.")
 
-    # TODO (planted problem 5): the `url` field is not validated here.
-    # It should reject empty strings and any value that does not start with
-    # "http://" or "https://", returning a 422 response on invalid input.
+    @validator('url')
+    def validate_url(cls, v):
+        if not v:
+            raise ValueError("URL cannot be empty")
+        if not (v.startswith('http://') or v.startswith('https://')):
+            raise ValueError("URL must start with 'http://' or 'https://'")
+        return v
 
 
 class Bookmark(BookmarkCreate):
