@@ -15,7 +15,7 @@ from app.repository import repository
 def clear_repository():
     """Reset the shared repository before each test for isolation."""
     repository._items.clear()
-    repository._next_id = -1
+    repository._next_id = 0
     yield
 
 
