@@ -48,7 +48,7 @@ def get_bookmark(bookmark_id: int) -> Bookmark:
 @router.delete("/bookmarks/{bookmark_id}", status_code=204)
 def delete_bookmark(bookmark_id: int) -> Response:
     """Delete a bookmark by id and return 204 No Content."""
-    # TODO (planted problem 3): implement deletion.
-    # This should remove the bookmark via repository.delete() and return a
-    # 204 response, or raise a 404 if the bookmark does not exist.
-    raise NotImplementedError("DELETE /bookmarks/{id} is not implemented yet")
+    if repository.delete(bookmark_id):
+        return Response(status_code=204)
+    else:
+        raise HTTPException(status_code=404, detail="Bookmark not found")
